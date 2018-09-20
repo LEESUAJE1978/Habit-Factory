@@ -1,0 +1,16 @@
+---
+title: "Lec1"
+author: "LEESUJAE"
+date: "2018년 7월 31일"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+###0.Data set preparation
+```{r Data Set}
+require(readxl); require(tidyverse) #readxl은 엑셀파일 불러오기, tidyverse는 ggplot2, tillbe, purrr, dplyr, stringr, tidyr, forcats, readr등의 패키기를 한번에 설치해줌
+
+```
