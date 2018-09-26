@@ -66,16 +66,29 @@ filter(COFFEE_F, CATEGORY_GROUP_CODE != "HABIT")
 
 COFFEE_F$USER_ID<-as.character(COFFEE_F$USER_ID)
 str(COFFEE_F)
-table(COFFEE_F$COMPANY_NAME)
+table(COFFEE_CARD$COMPANY_NAME)
 COFFEE_CARD<-COFFEE_F %>% filter(COMPANY_NAME %in%  c("신한카드", "KB국민카드")) %>% 
+  select(c(4,9,11,12,13,17,20,21,22,23,26,27))
+#베이지언 vs 피셔리언
+m<-naiveBayes(data = COFFEE_CARD1, COMPANY_NAME ~.)
+m
 
+COFFEE_CARD1<-COFFEE_CARD %>% select(c(2,6,7,9,11,12))
+COFFEE_CARD$CARD_TYPE
 names(COFFEE_CARD)
 
+smp_size<- floor(0.75*nrow(COFFEE_CARD1))
+set.seed(123)
+train_ind<- sample(seq_len(nrow(COFFEE_CARD1)), size = smp_size)
+train<-COFFEE_CARD1[train_ind,]
+test<-COFFEE_CARD1[-train_ind,]
 
-data(mgus)
+confusionMatrix(m, test$COMPANY_NAME)
+
+ikndata(mgus)
 install.packages('Cprob'); install.packages('prodlim')
 library(Cprob);library(prodlim)
-
+library(caret)
 data("mgus")
 str(mgus)
 CP<-cpf(Hist(time,ev), data = mgus)
