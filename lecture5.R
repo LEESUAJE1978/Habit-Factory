@@ -1,12 +1,22 @@
-require(readxl); require(tidyverse);require(psych); require(pastecs);require(MASS); require(outliers); require(lubridate); require(doBy);require(nycflights13); require(reshape2); require(stringr);library(readxl)
+require(readxl); require(tidyverse);require(lubridate); require(stringr)
 
-write.csv(COFFEE_F, 'COFFEE_F.csv')
+getwd()
+COFFEE_F<-read.csv('coffee_f.csv')
+SUCCESS<-read.csv('01_SUCCESS.csv')
+str(SUCCESS)
+names(COFFEE_F)
+COFFEE_F<-COFFEE_F[,-1]
+COFFEE_F$BRAND_NAME<-COFFEE_F$브랜드명
+COFFEE_F$브랜드명
 
 #1데이터 값 한글 변환
 #1.1. 브랜드 명 변환
 BRANDCODE<-read_excel('brand.xlsx') %>% 
   data.frame()
-
+class(BRANDCODE$BRANDCODE) #confirm type 'character'
+class(COFFEE_F$CATEGORY_GROUP_CODE) #confirm type 'character'
+COFFEE_F$CATEGORY_GROUP_CODE<-as.character(COFFEE_F$CATEGORY_GROUP_CODE)
+names(BRANDCODE)
 for (i in 1:nrow(COFFEE_F)) {
   try({
     COFFEE_F[i,3] = BRANDCODE[grep(pattern = COFFEE_F[i,3], x=BRANDCODE[,1]),2]
@@ -17,17 +27,25 @@ table(COFFEE_F$CATEGORY_GROUP_CODE)
 #1.2. 성별명 변한
 COFFEE_F$GENDER<-str_replace(COFFEE_F$GENDER, '1','남자')
 COFFEE_F$GENDER<-str_replace(COFFEE_F$GENDER, '2', '여자')
+table(COFFEE_F$GENDER)
 
 #1.3 카드 타입
-CARD_TYPE<-read_excel('card_type.xlsx')
+CARD_TYPE<-read_excel('card_type.xlsx') %>% 
+  data.frame()
+
+class(CARD_TYPE$KOREAN)
+class(COFFEE_F$CARD_TYPE) 
+COFFEE_F$CARD_TYPE<-as.character(COFFEE_F$CARD_TYPE) #type 확인
 
 for(i in 1:nrow(COFFEE_F)){
   try({
     COFFEE_F[i,10] = CARD_TYPE[grep(pattern = COFFEE_F[i,10], x=CARD_TYPE[,1]),2]
   })
 }
+table(COFFEE_F$CARD_TYPE)
 
-
+names(COFFEE_F)
+COFFEE_F<-COFFEE_F[,-27]
 #데이터 셋 만들기_스타벅스와 투썸 플레이스
 COFFEE_PAIR<-as.data.frame(COFFEE_F %>% 
                              filter(CATEGORY_GROUP_CODE %in% c('스타벅스','투썸플레이스') & between(CARD_APPROVAL_PRICE,50,50000)))
