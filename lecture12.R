@@ -1,4 +1,4 @@
-require(xlsx);require(readxl); require(dplyr); require(ggplot2)
+require(xlsx);require(readxl); require(dplyr); require(ggplot2); require(lubridate)
 #https://github.com/youngwoos/Doit_R/issues/9 한글깨짐 해결 방법
 #theme_set(theme_gray(base_family="AppleGothic")), par(family='AppleGothic')#그래프 한글 깨짐 해결 방법
 #Sys.setlocale(category = "LC_CTYPE", locale = "ko_KR.UTF-8") 문자 깨짐 해결방법
@@ -10,12 +10,11 @@ str(bium.order)
 bium.order$is_fromshop
 # wrangle NA value 
 colSums(is.na(bium.cart))  #345808
-
+bium.cart$birth
 str(bium.cart)
 #index practice 
 #bium.cart에서 90번째부터 100번째까지 고객의 생년월일만 출력하세요.
 bium.cart[90:100,4]
-require()
 colSums(is.na(bium.order))
 
 #date practice
@@ -25,9 +24,9 @@ colSums(is.na(bium.order))
 bium.cart$birth = as.POSIXct(as.character(bium.cart$birth), format = "%Y%m%d")
 bium.cart[,10] = year(bium.cart$birth)#출생년도별 정리 
 names(bium.cart)[10] = "birth_year"#컬럼명 변경하기
-bium.cart = rename(bium.cart, "birth_year" = "V10")
+#bium.cart = rename(bium.cart, "birth_year" = "V10")
 plot(table(subset(bium.cart, select = birth_year, subset = birth_year >1950)))
-plot(table(bium.cart %>% filter(year>1950) %>%  select(year)))
+plot(table(bium.cart %>% filter(birth_year>1950) %>%  select(birth_year)))
 unique(bium.cart$uid)
 
 #오더 df에 구매빈도 수 vs 카트 df 구매 빈도 수 의미 차이?
